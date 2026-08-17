@@ -1562,7 +1562,12 @@
      passando pelas duas faces ao contrario. Contando passos, o giro segue
      sempre no mesmo sentido, sem costura. */
   let passo = 0, raio = 0, relogio = null, retomada = null;
-  let naTela = false, ligado = false, primeiro = true;
+  /* Nasce true de proposito: o IntersectionObserver serve para PAUSAR
+     quando a secao sai da tela, nao para autorizar o inicio. Comecando em
+     false, bastava o observador nao disparar -- e no Safari isso acontece
+     -- para o giro nunca arrancar, enquanto o arrasto seguia funcionando,
+     que foi exatamente o sintoma no iPhone. */
+  let naTela = true, ligado = false, primeiro = true;
   const frente = () => ((passo % N) + N) % N;
 
   cards.forEach((card, i) => {
@@ -1585,6 +1590,10 @@
     const alt = Math.max(...cards.map(c => c.offsetHeight));
     const larg = anel.clientWidth;
     anel.classList.remove('medindo');
+    /* Layout ainda nao pronto (as fontes embutidas sao pesadas): sem
+       largura o raio sairia zero e o prisma nasceria achatado. Tenta de
+       novo no proximo quadro em vez de gravar a medida errada. */
+    if (!larg) { requestAnimationFrame(() => { if (noCel.matches) { medir(); pintar(false); } }); return; }
     anel.style.height = alt + 'px';
     raio = larg * 0.5;
     cards.forEach((c, i) => {
@@ -1671,6 +1680,8 @@
   noCel.addEventListener('change', ajustar);
   parado.addEventListener('change', ajustar);
   addEventListener('load', ajustar);
+  /* iOS devolve a pagina do cache de historico sem recarregar */
+  addEventListener('pageshow', e => { if (e.persisted) ajustar(); });
   ajustar();
 })();
 </script>
