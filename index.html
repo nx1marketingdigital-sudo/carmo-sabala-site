@@ -582,6 +582,23 @@
     color:var(--gold);
     transition:background .22s,color .22s;
   }
+
+  /* --- Alvos de toque no rodape ---
+     Em tela de toque os links do rodape mediam 15px de altura e os icones
+     27px, contra os 44px minimos de Apple HIG e Material. A consulta e por
+     ponteiro, nao por largura: o que exige o alvo maior e o dedo, nao a
+     janela. Com mouse o rodape segue compacto.
+     O respiro entra como padding do proprio link e a lista perde o gap --
+     assim a area clicavel cresce sem abrir buraco morto entre os itens. */
+  @media (pointer:coarse){
+    .foot-col ul{gap:0;}
+    .foot-col li a{
+      display:block;
+      padding-block:13px;
+    }
+    .socials{gap:12px;flex-wrap:wrap;}
+    .socials a{width:44px;height:44px;}
+  }
   .socials a:hover{background:var(--gold);color:#1A1408;}
 
   .contact-line{
