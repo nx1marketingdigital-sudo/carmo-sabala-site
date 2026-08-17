@@ -376,14 +376,16 @@
        na borda da tela e nao no meio do ar. */
     .doors{overflow:clip;}
     .doors-grid{
-      perspective:1150px;
-      perspective-origin:50% 44%;
+      -webkit-perspective:1150px;perspective:1150px;
+      -webkit-perspective-origin:50% 44%;perspective-origin:50% 44%;
     }
     .doors-anel{
       display:block;position:relative;
+      -webkit-transform-style:preserve-3d;
       transform-style:preserve-3d;
-      transition:transform .92s cubic-bezier(.42,.02,.16,1);
-      will-change:transform;
+      transition:transform .66s cubic-bezier(.42,.02,.16,1);
+      /* sem will-change aqui: no WebKit ele empurra o elemento para uma
+         camada propria e achata o preserve-3d dos filhos */
     }
     .doors-anel > .door{
       position:absolute;top:0;left:0;width:100%;
@@ -1550,12 +1552,18 @@
   const noCel  = matchMedia('(max-width:860px)');
   const parado = matchMedia('(prefers-reduced-motion:reduce)');
 
-  const PRIMEIRO = 1500;   // o primeiro giro vem cedo, para o efeito se anunciar
-  const GIRO     = 3800;
+  const PRIMEIRO = 1200;   // o primeiro giro vem cedo, para o efeito se anunciar
+  const GIRO     = 2000;
   const RESPIRO  = 9000;   // silencio depois que o visitante mexe
 
-  let atual = 0, raio = 0, relogio = null, retomada = null;
+  /* "passo" so cresce -- nunca volta a zero. Se o angulo fosse recalculado
+     como -(indice*120), ao passar da terceira face para a primeira ele
+     cairia de -240deg para 0deg e o anel rebobinaria 240 graus para tras,
+     passando pelas duas faces ao contrario. Contando passos, o giro segue
+     sempre no mesmo sentido, sem costura. */
+  let passo = 0, raio = 0, relogio = null, retomada = null;
   let naTela = false, ligado = false, primeiro = true;
+  const frente = () => ((passo % N) + N) % N;
 
   cards.forEach((card, i) => {
     const b = document.createElement('button');
@@ -1587,15 +1595,23 @@
   function pintar(suave) {
     const antes = anel.style.transition;
     if (!suave) anel.style.transition = 'none';
-    anel.style.transform = `translateZ(${-raio}px) rotateY(${-atual * PASSO}deg)`;
+    anel.style.transform = `translateZ(${-raio}px) rotateY(${-passo * PASSO}deg)`;
     if (!suave) { void anel.offsetWidth; anel.style.transition = antes; }
-    cards.forEach((c, i) => c.toggleAttribute('data-frente', i === atual));
-    pontos.forEach((b, i) => b.toggleAttribute('aria-current', i === atual));
+    const f = frente();
+    cards.forEach((c, i) => c.toggleAttribute('data-frente', i === f));
+    pontos.forEach((b, i) => b.toggleAttribute('aria-current', i === f));
   }
 
-  function irPara(i, suave = true) {
-    atual = ((i % N) + N) % N;
+  /* avanca n faces no sentido do giro (n negativo volta, para o arrasto) */
+  function girar(n = 1, suave = true) {
+    passo += n;
     pintar(suave && !parado.matches);
+  }
+
+  /* clique num ponto: vai ate aquela face pelo caminho da frente, para o
+     sentido do giro nunca se inverter sozinho */
+  function irPara(i, suave = true) {
+    girar(((i - frente()) % N + N) % N, suave);
   }
 
   const pode = () => ligado && naTela && !document.hidden && !parado.matches;
@@ -1607,8 +1623,8 @@
     retomada = setTimeout(() => {
       if (!pode()) return;
       primeiro = false;
-      irPara(atual + 1);
-      relogio = setInterval(() => { if (pode()) irPara(atual + 1); else clearInterval(relogio); }, GIRO);
+      girar(1);
+      relogio = setInterval(() => { if (pode()) girar(1); else clearInterval(relogio); }, GIRO);
     }, espera);
   }
 
@@ -1624,7 +1640,7 @@
   palco.addEventListener('pointerup', e => {
     if (x0 === null) return;
     const dx = e.clientX - x0; x0 = null;
-    if (Math.abs(dx) > 45) irPara(atual + (dx < 0 ? 1 : -1));
+    if (Math.abs(dx) > 45) girar(dx < 0 ? 1 : -1);
   }, { passive: true });
   palco.addEventListener('pointercancel', () => { x0 = null; }, { passive: true });
 
@@ -1640,7 +1656,7 @@
     ligado = noCel.matches;
     clearInterval(relogio); clearTimeout(retomada);
     primeiro = true;
-    if (ligado) { medir(); irPara(0, false); tocar(); }
+    if (ligado) { medir(); pintar(false); tocar(); }
     else {
       anel.style.height = anel.style.transform = '';
       cards.forEach(c => { c.style.transform = ''; c.removeAttribute('data-frente'); });
