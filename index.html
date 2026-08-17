@@ -361,43 +361,45 @@
   }
 
   /* ---- Carrossel 3D das tres portas (celular) ----
-     Os tres cards sao as faces de um prisma triangular. O anel gira 120
-     graus por vez no eixo Y; a face da frente encara a camera e as outras
-     duas ficam de costas, escondidas por backface-visibility.
-     O anel leva translateZ(-raio) junto com o giro: sem isso a face da
-     frente ficaria mais perto da camera e a perspectiva a aumentaria,
-     estourando a largura do container. Com ele, a frente pousa em z=0 e
-     sai do tamanho natural. */
+     Cada card carrega a propria perspectiva dentro do seu transform:
+     perspective(1000px) rotateY(...). Nao ha espaco 3D compartilhado,
+     portanto nada de transform-style:preserve-3d.
+     Isso e deliberado. O preserve-3d e o recurso 3D que mais quebra no
+     WebKit: qualquer ancestral com overflow diferente de visible faz o
+     Safari achatar o espaco 3D, e a secao precisa de overflow:clip para
+     o card girando nao alargar o viewport. Com a perspectiva por card,
+     as duas coisas convivem. */
   .doors-dots{display:none;}
   @media (max-width:860px){
-    /* O card girando escapa da caixa; sem prender aqui, o navegador
-       alarga o viewport (320 -> 333px no iPhone SE) e a pagina inteira
-       encolhe. Prende na secao, e nao no .wrap, para o card ser cortado
-       na borda da tela e nao no meio do ar. */
     .doors{overflow:clip;}
-    .doors-grid{
-      -webkit-perspective:1150px;perspective:1150px;
-      -webkit-perspective-origin:50% 44%;perspective-origin:50% 44%;
-    }
-    .doors-anel{
-      display:block;position:relative;
-      -webkit-transform-style:preserve-3d;
-      transform-style:preserve-3d;
-      transition:transform .66s cubic-bezier(.42,.02,.16,1);
-      /* sem will-change aqui: no WebKit ele empurra o elemento para uma
-         camada propria e achata o preserve-3d dos filhos */
-    }
+    .doors-anel{display:block;position:relative;}
+
     .doors-anel > .door{
       position:absolute;top:0;left:0;width:100%;
-      backface-visibility:hidden;
-      -webkit-backface-visibility:hidden;
+      /* estacionado a direita, pronto para entrar */
+      transform:perspective(1000px) rotateY(66deg) translateX(44%) scale(.92);
+      transform-origin:50% 50%;
+      opacity:0;pointer-events:none;
+      transition:transform .66s cubic-bezier(.42,.02,.16,1),opacity .46s ease;
     }
-    /* so a face da frente recebe toque */
-    .doors-anel > .door:not([data-frente]){pointer-events:none;}
+    .doors-anel > .door[data-lado="esq"]{
+      transform:perspective(1000px) rotateY(-66deg) translateX(-44%) scale(.92);
+    }
+    .doors-anel > .door[data-frente]{
+      transform:perspective(1000px) rotateY(0deg) translateX(0) scale(1);
+      opacity:1;pointer-events:auto;z-index:2;
+    }
+    .doors-anel > .door[data-saindo]{
+      transform:perspective(1000px) rotateY(-66deg) translateX(-44%) scale(.92);
+      opacity:0;z-index:1;
+    }
+    .doors-anel > .door[data-saindo="tras"]{
+      transform:perspective(1000px) rotateY(66deg) translateX(44%) scale(.92);
+    }
 
-    /* usada por um instante para medir a altura natural dos cards */
-    .doors-anel.medindo{transform:none!important;transform-style:flat;}
-    .doors-anel.medindo > .door{position:relative;transform:none!important;}
+    .doors-anel.medindo > .door{
+      position:relative;transform:none!important;opacity:1;transition:none;
+    }
 
     .doors-dots{
       display:flex;justify-content:center;align-items:center;
@@ -1360,7 +1362,10 @@
        ela o card so trocava seco e o efeito 3D nao aparecia -- e o iOS
        liga essa preferencia sozinho no Modo de Baixo Consumo, ou seja,
        boa parte dos iPhones cairia no modo seco sem ter pedido. */
-    .doors-anel{transition:transform .66s cubic-bezier(.42,.02,.16,1) !important;}
+    .doors-anel > .door{
+      transition:transform .66s cubic-bezier(.42,.02,.16,1),
+                 opacity .46s ease !important;
+    }
   }
 </style>
 
@@ -1538,12 +1543,10 @@
 
 <script>
 /* Carrossel 3D das tres portas — so no celular.
-   Os cards sao as faces de um prisma triangular: cada um fica em
-   rotateY(i*120deg) translateZ(raio), e o anel gira -atual*120deg.
-   O anel ainda leva translateZ(-raio), para a face da frente pousar em
-   z=0 e sair do tamanho natural, sem a perspectiva aumenta-la.
-   Cala a boca quando o visitante encosta, quando a secao sai da tela,
-   quando a aba vai para o fundo, e quando o sistema pede menos animacao. */
+   Cada card gira com a propria perspectiva, sem espaco 3D compartilhado
+   (ver o porque no CSS). O card da frente fica em rotateY(0); os outros
+   ficam estacionados de lado, virados e transparentes. Avancar e mandar
+   um sair para a esquerda e o proximo entrar da direita. */
 (() => {
   const palco = document.querySelector('.doors-grid');
   const anel  = document.querySelector('.doors-anel');
@@ -1552,21 +1555,13 @@
 
   const cards  = [...anel.querySelectorAll('.door')];
   const N      = cards.length;
-  const PASSO  = 360 / N;
   const noCel  = matchMedia('(max-width:860px)');
-  const parado = matchMedia('(prefers-reduced-motion:reduce)');
-
-  const PRIMEIRO = 1200;   // o primeiro giro vem cedo, para o efeito se anunciar
+  const DUR      = 700;    // acompanha a transicao do CSS
+  const PRIMEIRO = 1200;
   const GIRO     = 2000;
-  const RESPIRO  = 9000;   // silencio depois que o visitante mexe
+  const RESPIRO  = 9000;
 
-  /* "passo" so cresce -- nunca volta a zero. Se o angulo fosse recalculado
-     como -(indice*120), ao passar da terceira face para a primeira ele
-     cairia de -240deg para 0deg e o anel rebobinaria 240 graus para tras,
-     passando pelas duas faces ao contrario. Contando passos, o giro segue
-     sempre no mesmo sentido, sem costura. */
-  let passo = 0, raio = 0, relogio = null, retomada = null;
-  let ligado = false, primeiro = true;
+  let passo = 0, relogio = null, retomada = null, ligado = false, primeiro = true;
   const frente = () => ((passo % N) + N) % N;
 
   cards.forEach((card, i) => {
@@ -1581,66 +1576,89 @@
   });
   const pontos = [...barra.querySelectorAll('button')];
 
-  /* A altura do anel precisa ser explicita: as faces sao absolutas e nao
-     empurram mais o pai. Medimos com os cards de volta ao fluxo, num
-     instante so, antes que o quadro va para a tela. */
+  /* Muda um card de lugar sem animar — usado para estacionar quem vai
+     entrar do lado certo antes de trazer para a frente. */
+  function semAnimar(card, mexer) {
+    card.style.transition = 'none';
+    mexer();
+    void card.offsetWidth;
+    card.style.transition = '';
+  }
+
+  /* A altura precisa ser explicita: os cards sao absolutos e nao empurram
+     mais o pai. Mede com eles de volta ao fluxo, num quadro so. */
   function medir() {
     anel.classList.add('medindo');
     const alt = Math.max(...cards.map(c => c.offsetHeight));
-    const larg = anel.clientWidth;
     anel.classList.remove('medindo');
-    /* Layout ainda nao pronto (as fontes embutidas sao pesadas): sem
-       largura o raio sairia zero e o prisma nasceria achatado. Tenta de
-       novo no proximo quadro em vez de gravar a medida errada. */
-    if (!larg) { requestAnimationFrame(() => { if (noCel.matches) { medir(); pintar(false); } }); return; }
+    if (!alt) { requestAnimationFrame(() => { if (noCel.matches) medir(); }); return; }
     anel.style.height = alt + 'px';
-    raio = larg * 0.5;
-    cards.forEach((c, i) => {
-      c.style.transform = `rotateY(${i * PASSO}deg) translateZ(${raio}px)`;
-    });
   }
 
-  function pintar(suave) {
-    const antes = anel.style.transition;
-    if (!suave) anel.style.transition = 'none';
-    anel.style.transform = `translateZ(${-raio}px) rotateY(${-passo * PASSO}deg)`;
-    if (!suave) { void anel.offsetWidth; anel.style.transition = antes; }
+  function marcar() {
     const f = frente();
-    cards.forEach((c, i) => c.toggleAttribute('data-frente', i === f));
     pontos.forEach((b, i) => b.toggleAttribute('aria-current', i === f));
   }
 
-  /* avanca n faces no sentido do giro (n negativo volta, para o arrasto) */
-  function girar(n = 1, suave = true) {
+  function assentar() {
+    const f = frente();
+    cards.forEach((c, i) => semAnimar(c, () => {
+      c.removeAttribute('data-saindo');
+      c.removeAttribute('data-lado');
+      c.toggleAttribute('data-frente', i === f);
+    }));
+    marcar();
+  }
+
+  function girar(n = 1) {
+    const antes = frente();
     passo += n;
-    /* O giro anima sempre, inclusive com reducao de movimento -- ver a
-       excecao no CSS e o porque dela. */
-    pintar(suave);
+    const agora = frente();
+    if (antes === agora) return;
+
+    const saindo = cards[antes], entrando = cards[agora];
+    const paraTras = n < 0;
+
+    /* quem entra se posiciona do lado oposto ao da saida, sem animar */
+    semAnimar(entrando, () => {
+      entrando.removeAttribute('data-saindo');
+      paraTras ? entrando.setAttribute('data-lado', 'esq')
+               : entrando.removeAttribute('data-lado');
+    });
+
+    saindo.removeAttribute('data-frente');
+    saindo.setAttribute('data-saindo', paraTras ? 'tras' : '');
+    entrando.setAttribute('data-frente', '');
+    marcar();
+
+    /* terminada a saida, devolve o card ao ponto de partida sem animar,
+       senao ele voltaria arrastando pela tela */
+    setTimeout(() => {
+      if (saindo.hasAttribute('data-frente')) return;   // ja voltou a ser a frente
+      semAnimar(saindo, () => {
+        saindo.removeAttribute('data-saindo');
+        saindo.removeAttribute('data-lado');
+      });
+    }, DUR);
   }
 
-  /* clique num ponto: vai ate aquela face pelo caminho da frente, para o
-     sentido do giro nunca se inverter sozinho */
-  function irPara(i, suave = true) {
-    girar(((i - frente()) % N + N) % N, suave);
+  /* clique num ponto: anda para a frente ate a face pedida */
+  function irPara(i) {
+    const d = ((i - frente()) % N + N) % N;
+    if (d) girar(d === 1 ? 1 : d);
   }
 
-  /* So duas condicoes: e celular, e a aba esta a frente. Visibilidade na
-     tela saiu de proposito -- girar fora de vista custa um transform a
-     cada 2s, e depender de um observador para COMECAR ja deixou o
-     carrossel morto no iPhone uma vez. Reducao de movimento tambem saiu
-     daqui: em vez de matar o giro, ela tira a animacao (ver pintar). */
   const pode = () => ligado && !document.hidden;
 
   function tocar() {
     clearInterval(relogio); clearTimeout(retomada);
     if (!pode()) return;
-    const espera = primeiro ? PRIMEIRO : GIRO;
     retomada = setTimeout(() => {
       if (!pode()) return;
       primeiro = false;
       girar(1);
       relogio = setInterval(() => { if (pode()) girar(1); else clearInterval(relogio); }, GIRO);
-    }, espera);
+    }, primeiro ? PRIMEIRO : GIRO);
   }
 
   function adiar() {
@@ -1649,7 +1667,6 @@
     retomada = setTimeout(tocar, RESPIRO);
   }
 
-  /* arrastar com o dedo */
   let x0 = null;
   palco.addEventListener('pointerdown', e => { x0 = e.clientX; adiar(); }, { passive: true });
   palco.addEventListener('pointerup', e => {
@@ -1666,22 +1683,24 @@
     ligado = noCel.matches;
     clearInterval(relogio); clearTimeout(retomada);
     primeiro = true;
-    if (ligado) { medir(); pintar(false); tocar(); }
+    if (ligado) { medir(); assentar(); tocar(); }
     else {
-      anel.style.height = anel.style.transform = '';
-      cards.forEach(c => { c.style.transform = ''; c.removeAttribute('data-frente'); });
+      anel.style.height = '';
+      cards.forEach(c => semAnimar(c, () => {
+        c.removeAttribute('data-frente');
+        c.removeAttribute('data-saindo');
+        c.removeAttribute('data-lado');
+      }));
     }
   }
 
-  let redimensiona;
+  let redim;
   addEventListener('resize', () => {
-    clearTimeout(redimensiona);
-    redimensiona = setTimeout(() => { if (noCel.matches) { medir(); irPara(atual, false); } }, 180);
+    clearTimeout(redim);
+    redim = setTimeout(() => { if (noCel.matches) medir(); }, 180);
   });
   noCel.addEventListener('change', ajustar);
-  parado.addEventListener('change', ajustar);
   addEventListener('load', ajustar);
-  /* iOS devolve a pagina do cache de historico sem recarregar */
   addEventListener('pageshow', e => { if (e.persisted) ajustar(); });
   ajustar();
 })();
