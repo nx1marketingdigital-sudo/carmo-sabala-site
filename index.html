@@ -416,9 +416,7 @@
     }
     .doors-dots button[aria-current] i{width:27px;background:var(--gold);}
   }
-  @media (prefers-reduced-motion:reduce){
-    .doors-anel{transition:none;}
-  }
+
 
   /* ============================================================
      SOBRE NÓS
@@ -1357,6 +1355,12 @@
 
   @media (prefers-reduced-motion:reduce){
     *{transition:none !important;}
+    /* Excecao deliberada, decidida pelo Alexandre em 17/08: o giro das
+       tres portas continua animado mesmo com reducao de movimento. Sem
+       ela o card so trocava seco e o efeito 3D nao aparecia -- e o iOS
+       liga essa preferencia sozinho no Modo de Baixo Consumo, ou seja,
+       boa parte dos iPhones cairia no modo seco sem ter pedido. */
+    .doors-anel{transition:transform .66s cubic-bezier(.42,.02,.16,1) !important;}
   }
 </style>
 
@@ -1609,10 +1613,9 @@
   /* avanca n faces no sentido do giro (n negativo volta, para o arrasto) */
   function girar(n = 1, suave = true) {
     passo += n;
-    /* Com reducao de movimento o card troca na hora, sem o giro. O
-       conteudo continua rodando; o que sai e a animacao, que e o que
-       incomoda quem pediu menos movimento. */
-    pintar(suave && !parado.matches);
+    /* O giro anima sempre, inclusive com reducao de movimento -- ver a
+       excecao no CSS e o porque dela. */
+    pintar(suave);
   }
 
   /* clique num ponto: vai ate aquela face pelo caminho da frente, para o
