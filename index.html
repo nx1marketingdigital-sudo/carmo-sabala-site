@@ -1562,12 +1562,7 @@
      passando pelas duas faces ao contrario. Contando passos, o giro segue
      sempre no mesmo sentido, sem costura. */
   let passo = 0, raio = 0, relogio = null, retomada = null;
-  /* Nasce true de proposito: o IntersectionObserver serve para PAUSAR
-     quando a secao sai da tela, nao para autorizar o inicio. Comecando em
-     false, bastava o observador nao disparar -- e no Safari isso acontece
-     -- para o giro nunca arrancar, enquanto o arrasto seguia funcionando,
-     que foi exatamente o sintoma no iPhone. */
-  let naTela = true, ligado = false, primeiro = true;
+  let ligado = false, primeiro = true;
   const frente = () => ((passo % N) + N) % N;
 
   cards.forEach((card, i) => {
@@ -1614,6 +1609,9 @@
   /* avanca n faces no sentido do giro (n negativo volta, para o arrasto) */
   function girar(n = 1, suave = true) {
     passo += n;
+    /* Com reducao de movimento o card troca na hora, sem o giro. O
+       conteudo continua rodando; o que sai e a animacao, que e o que
+       incomoda quem pediu menos movimento. */
     pintar(suave && !parado.matches);
   }
 
@@ -1623,7 +1621,12 @@
     girar(((i - frente()) % N + N) % N, suave);
   }
 
-  const pode = () => ligado && naTela && !document.hidden && !parado.matches;
+  /* So duas condicoes: e celular, e a aba esta a frente. Visibilidade na
+     tela saiu de proposito -- girar fora de vista custa um transform a
+     cada 2s, e depender de um observador para COMECAR ja deixou o
+     carrossel morto no iPhone uma vez. Reducao de movimento tambem saiu
+     daqui: em vez de matar o giro, ela tira a animacao (ver pintar). */
+  const pode = () => ligado && !document.hidden;
 
   function tocar() {
     clearInterval(relogio); clearTimeout(retomada);
@@ -1652,11 +1655,6 @@
     if (Math.abs(dx) > 45) girar(dx < 0 ? 1 : -1);
   }, { passive: true });
   palco.addEventListener('pointercancel', () => { x0 = null; }, { passive: true });
-
-  new IntersectionObserver(([e]) => {
-    naTela = e.isIntersecting;
-    naTela ? tocar() : (clearInterval(relogio), clearTimeout(retomada));
-  }, { threshold: 0.35 }).observe(palco);
 
   document.addEventListener('visibilitychange', () =>
     document.hidden ? (clearInterval(relogio), clearTimeout(retomada)) : tocar());
@@ -1747,8 +1745,8 @@
           <path d="M16.5 26.5 13 44l11-5.5L35 44l-3.5-17.5"/>
         </svg>
         <div class="stat-txt">
-          <b class="pend-num" aria-label="numero a confirmar">&mdash;&mdash;</b>
-          <span>Anos de experiência<br><i class="pend-tag">a confirmar</i></span>
+          <b>8</b>
+          <span>Anos de experiência</span>
         </div>
       </div>
 
@@ -1760,8 +1758,8 @@
           <path d="M35 26a12.5 12.5 0 0 1 8 11"/>
         </svg>
         <div class="stat-txt">
-          <b class="pend-num" aria-label="numero a confirmar">&mdash;&mdash;</b>
-          <span>Empresas atendidas<br><i class="pend-tag">a confirmar</i></span>
+          <b>+500</b>
+          <span>Empresas atendidas</span>
         </div>
       </div>
 
