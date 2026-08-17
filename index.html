@@ -284,8 +284,52 @@
     margin-top:auto;padding-top:2px;
     transition:transform .25s;
   }
-  .door:hover{border-color:var(--gold);transform:translateY(-3px);}
-  .door:hover .door-arrow{transform:translateX(6px);}
+  @media (hover:hover){
+    .door:hover{border-color:var(--gold);transform:translateY(-3px);}
+    .door:hover .door-arrow{transform:translateX(6px);}
+  }
+
+  /* ---- Carrossel das tres portas (celular) ----
+     Empilhados, os tres ocupavam meia tela de rolagem. Aqui vira um card
+     por vez, girando sozinho. O trilho e scroll-snap nativo: o dedo
+     desliza com a inercia do proprio sistema e o giro automatico e so um
+     scrollTo por cima -- nada de swipe reimplementado na mao.
+     Os cards ficam em 86% para deixar aparecer uma fatia do vizinho: e o
+     que avisa, sem escrever, que da para arrastar. */
+  .doors-dots{display:none;}
+  @media (max-width:860px){
+    .doors-grid{
+      display:flex;
+      overflow-x:auto;
+      scroll-snap-type:x mandatory;
+      -webkit-overflow-scrolling:touch;
+      gap:12px;
+      padding-block:4px 2px;
+      scrollbar-width:none;-ms-overflow-style:none;
+    }
+    .doors-grid::-webkit-scrollbar{display:none;}
+    .doors-grid > .door{flex:0 0 86%;scroll-snap-align:center;}
+
+    .doors-dots{
+      display:flex;justify-content:center;align-items:center;
+      gap:0;padding-top:6px;
+    }
+    /* O ponto e pequeno, mas o botao mede 44x44: o alvo de toque mora no
+       botao, nao no desenho. O gap fica em zero porque o proprio botao ja
+       carrega o espacamento. */
+    .doors-dots button{
+      -webkit-appearance:none;appearance:none;
+      background:none;border:0;cursor:pointer;padding:0;
+      min-width:44px;min-height:44px;
+      display:grid;place-items:center;
+    }
+    .doors-dots i{
+      display:block;width:7px;height:7px;border-radius:99px;
+      background:#CFC5B6;
+      transition:width .34s ease,background .34s ease;
+    }
+    .doors-dots button[aria-current] i{width:27px;background:var(--gold);}
+  }
 
   /* ============================================================
      SOBRE NÓS
@@ -698,7 +742,7 @@
     font-size:10px;font-weight:700;letter-spacing:0;
   }
   .faq .rot{
-    display:block;font-size:10.5px;font-weight:700;letter-spacing:.13em;
+    display:block;font-size:11px;font-weight:700;letter-spacing:.13em;
     text-transform:uppercase;color:var(--gold-dim);margin-bottom:2px;
   }
 
@@ -932,7 +976,7 @@
   .cartao-acao h3{font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.1em;
                   text-transform:uppercase;color:var(--ink-head);margin:0;}
   .cartao-acao p{margin:0;font-size:12.6px;line-height:1.7;flex:1;}
-  .cta-linha{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  .cta-linha{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
              color:var(--gold-dim);}
   .cartao-acao:hover .cta-linha{color:var(--gold);}
   @media (max-width:860px){
@@ -1084,7 +1128,7 @@
   }
   .uf-intro{margin:0 0 14px;font-size:12.6px;line-height:1.7;}
   .uf-grade{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;}
-  .uf{font-size:10.5px;font-weight:700;letter-spacing:.06em;color:var(--gold-dim);
+  .uf{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--gold-dim);
       background:var(--cream);border:1px solid var(--line);border-radius:5px;
       padding:5px 9px;cursor:default;transition:all .2s;}
   .uf:hover{background:var(--gold);border-color:var(--gold);color:#FFF;}
@@ -1104,11 +1148,11 @@
   .mat:hover{border-color:var(--gold);transform:translateY(-3px);}
   .mat-foto{aspect-ratio:16/9;background:center/cover no-repeat;}
   .mat-corpo{padding:15px 16px 17px;display:flex;flex-direction:column;gap:8px;flex:1;}
-  .mat-cat{font-size:9.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);}
+  .mat-cat{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);}
   .mat h3{font-family:var(--sans);font-size:13px;font-weight:600;line-height:1.42;
           color:var(--ink-head);margin:0;}
   .mat p{margin:0;font-size:12.2px;line-height:1.65;color:#6E675C;}
-  .mat-pe{margin-top:auto;padding-top:8px;font-size:10px;font-weight:700;letter-spacing:.14em;
+  .mat-pe{margin-top:auto;padding-top:8px;font-size:11px;font-weight:700;letter-spacing:.14em;
           text-transform:uppercase;color:var(--gold-dim);}
 
   /* ============ materia ============ */
@@ -1134,7 +1178,7 @@
   .art-fim{max-width:66ch;margin:34px auto 0;padding-top:24px;border-top:1px solid var(--line);
            display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;}
   .art-fim p{margin:0;font-size:12.5px;color:#6E675C;max-width:34ch;}
-  .voltar{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  .voltar{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
           color:var(--gold-dim);}
   .voltar:hover{color:var(--gold);}
   @media (max-width:860px){ .blog-grade .wrap{grid-template-columns:1fr;} }
@@ -1200,7 +1244,7 @@
     .foot-in{grid-template-columns:1fr 1fr;gap:38px;}
   }
   @media (max-width:860px){
-    .doors-grid,.posts-grid{grid-template-columns:1fr;}
+    .posts-grid{grid-template-columns:1fr;}
     .about-grid,.quote-grid{grid-template-columns:1fr;gap:32px;}
     .mvv-card{grid-template-columns:1fr;}
     .mvv-col + .mvv-col{border-left:0;border-top:1px solid var(--line);}
@@ -1345,7 +1389,113 @@
     </a>
 
   </div>
+
+  <div class="wrap doors-dots" role="tablist" aria-label="Escolha o assunto"></div>
 </section>
+
+<script>
+/* Carrossel das tres portas — so no celular.
+   O trilho ja rola e prende sozinho por CSS (scroll-snap); este script
+   apenas empurra o proximo de tempos em tempos e mantem os pontos em dia.
+   Ele se cala quando: o visitante encosta, a secao sai da tela, a aba vai
+   para o fundo, ou o sistema pede menos animacao. */
+(() => {
+  const trilho = document.querySelector('.doors-grid');
+  const barra  = document.querySelector('.doors-dots');
+  if (!trilho || !barra) return;
+
+  const cards   = [...trilho.querySelectorAll('.door')];
+  const noCel   = matchMedia('(max-width:860px)');
+  const parado  = matchMedia('(prefers-reduced-motion:reduce)');
+  const GIRO    = 4800;   // tempo de cada card
+  const RESPIRO = 9000;   // silencio depois que o visitante mexe
+
+  let atual = 0, relogio = null, retomada = null, naTela = false, ligado = false;
+
+  cards.forEach((card, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.innerHTML = '<i></i>';
+    b.setAttribute('role', 'tab');
+    const titulo = card.querySelector('.door-head');
+    b.setAttribute('aria-label', titulo ? titulo.textContent.trim() : `Card ${i + 1}`);
+    b.addEventListener('click', () => { irPara(i); adiar(); });
+    barra.appendChild(b);
+  });
+  const pontos = [...barra.querySelectorAll('button')];
+
+  const marcar = (i) => pontos.forEach((b, k) => b.toggleAttribute('aria-current', k === i));
+
+  function posicaoDe(card) {
+    const r = card.getBoundingClientRect(), rt = trilho.getBoundingClientRect();
+    return trilho.scrollLeft + (r.left - rt.left) - (trilho.clientWidth - r.width) / 2;
+  }
+
+  function irPara(i, suave = true) {
+    atual = (i + cards.length) % cards.length;
+    trilho.scrollTo({
+      left: posicaoDe(cards[atual]),
+      behavior: suave && !parado.matches ? 'smooth' : 'auto',
+    });
+    marcar(atual);
+  }
+
+  /* qual card esta mais perto do centro — usado quando o dedo arrasta */
+  function lerAtual() {
+    const centro = trilho.scrollLeft + trilho.clientWidth / 2;
+    let perto = 0, menor = Infinity;
+    cards.forEach((c, i) => {
+      const r = c.getBoundingClientRect(), rt = trilho.getBoundingClientRect();
+      const meio = trilho.scrollLeft + (r.left - rt.left) + r.width / 2;
+      const d = Math.abs(meio - centro);
+      if (d < menor) { menor = d; perto = i; }
+    });
+    if (perto !== atual) { atual = perto; marcar(atual); }
+  }
+
+  const pode = () => ligado && naTela && !document.hidden && !parado.matches;
+
+  function tocar() {
+    clearInterval(relogio);
+    if (!pode()) return;
+    relogio = setInterval(() => { if (pode()) irPara(atual + 1); }, GIRO);
+  }
+
+  /* silencia por um tempo depois de qualquer toque do visitante */
+  function adiar() {
+    clearInterval(relogio);
+    clearTimeout(retomada);
+    retomada = setTimeout(tocar, RESPIRO);
+  }
+
+  let quieto;
+  trilho.addEventListener('scroll', () => {
+    clearTimeout(quieto);
+    quieto = setTimeout(lerAtual, 90);
+  }, { passive: true });
+
+  ['pointerdown', 'touchstart', 'wheel'].forEach(ev =>
+    trilho.addEventListener(ev, adiar, { passive: true }));
+  trilho.addEventListener('focusin', adiar);
+
+  new IntersectionObserver(([e]) => {
+    naTela = e.isIntersecting;
+    naTela ? tocar() : clearInterval(relogio);
+  }, { threshold: 0.4 }).observe(trilho);
+
+  document.addEventListener('visibilitychange', () => document.hidden ? clearInterval(relogio) : tocar());
+
+  function ajustar() {
+    ligado = noCel.matches;
+    clearInterval(relogio); clearTimeout(retomada);
+    if (ligado) { irPara(0, false); tocar(); }
+    else { trilho.scrollTo({ left: 0, behavior: 'auto' }); }
+  }
+  noCel.addEventListener('change', ajustar);
+  parado.addEventListener('change', ajustar);
+  ajustar();
+})();
+</script>
 
 <!-- =====================  SOBRE NÓS  ===================== -->
 <section class="about" id="sobre">
