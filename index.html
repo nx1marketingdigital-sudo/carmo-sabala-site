@@ -94,7 +94,7 @@
 
   .card-title{
     font-family:var(--sans);
-    font-size:10.5px;
+    font-size:11px;
     font-weight:700;
     letter-spacing:.09em;
     text-transform:uppercase;
@@ -269,7 +269,7 @@
     background:var(--brown);
     border-radius:10px 10px 0 0;
     color:#EFE7D9;
-    font-size:10.5px;font-weight:700;
+    font-size:11px;font-weight:700;
     letter-spacing:.13em;text-transform:uppercase;
     padding:13px 14px;
   }
@@ -350,13 +350,20 @@
   .stats{background:var(--cream);padding-bottom:22px;}
   .stats-band{
     background:var(--ink-900);border-radius:10px;overflow:hidden;
-    display:grid;grid-template-columns:repeat(4,1fr);
+    display:grid;
+    /* minmax(0,1fr) e nao 1fr: "1fr" equivale a minmax(auto,1fr), e o
+       auto impede a coluna de encolher abaixo do conteudo -- era o que
+       decepava "ATENDIMENTO HUMANIZADO" no celular */
+    grid-template-columns:repeat(4,minmax(0,1fr));
   }
   .stat{
     padding:16px 12px;
     display:flex;flex-direction:row;align-items:center;
     justify-content:center;gap:13px;text-align:left;
+    min-width:0;
   }
+  .stat svg{flex:none;}
+  .stat-txt{min-width:0;}
   .stat-txt{display:flex;flex-direction:column;gap:3px;}
   .stat + .stat{border-left:1px solid rgba(255,255,255,.12);}
   .stat b{
@@ -367,7 +374,7 @@
   }
   .stat .so-rotulo{font-size:11.5px;letter-spacing:.14em;color:#E4DDD1;}
   .stat span{
-    font-size:10.5px;font-weight:600;
+    font-size:11px;font-weight:600;
     letter-spacing:.16em;text-transform:uppercase;
     color:#CFC7B9;line-height:1.45;
   }
@@ -507,7 +514,7 @@
   .post-photo{aspect-ratio:4.6;border-radius:10px 10px 0 0;}
   .post-body{padding:8px 10px 9px;display:flex;flex-direction:column;gap:3px;flex:1;}
   .post-cat{
-    font-size:10.5px;font-weight:700;
+    font-size:11px;font-weight:700;
     letter-spacing:.19em;text-transform:uppercase;
     color:var(--gold);
   }
@@ -1180,7 +1187,7 @@
     .about-grid,.quote-grid{grid-template-columns:1fr;gap:32px;}
     .mvv-card{grid-template-columns:1fr;}
     .mvv-col + .mvv-col{border-left:0;border-top:1px solid var(--line);}
-    .stats-band{grid-template-columns:1fr 1fr;}
+    .stats-band{grid-template-columns:repeat(2,minmax(0,1fr));}
     .stat:nth-child(3){border-left:0;}
     .stat:nth-child(n+3){border-top:1px solid rgba(255,255,255,.09);}
     .svc-grid{grid-template-columns:1fr 1fr;}
@@ -1192,6 +1199,11 @@
     .svc-grid{grid-template-columns:1fr;}
     .foot-in{grid-template-columns:1fr;}
     .head-cta span{display:none;}
+    /* Em tela estreita o icone sobe para cima do texto: lado a lado eles
+       disputam a largura da coluna e o rotulo acaba cortado. */
+    .stat{flex-direction:column;gap:9px;text-align:center;padding:16px 9px;}
+    .stat .so-rotulo{display:block;}
+    .pend-tag{white-space:normal;}
   }
 
   @media (prefers-reduced-motion:reduce){
