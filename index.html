@@ -1406,8 +1406,19 @@
     .mvv-col + .mvv-col{border-left:0;border-top:1px solid var(--line);}
     .stats-band{grid-template-columns:repeat(2,minmax(0,1fr));}
             .svc-grid{grid-template-columns:1fr 1fr;}
-    .hero-in{padding-block:72px 82px;}
-    .hero-scrim{background:linear-gradient(0deg,#17120E 12%,rgba(23,18,14,.82) 55%,rgba(23,18,14,.6) 100%);}
+    /* No celular a foto DEIXA DE SER FUNDO e vira faixa no topo.
+       Ela era uma banda de 64% a direita, desenhada para o desktop: na tela
+       estreita o titulo atravessava para dentro dela e caia no rosto das
+       pessoas, e a borda da banda aparecia como emenda vertical no meio da
+       tela. Legibilidade vence proporcao (L-2026-08-16-02). */
+    .hero{display:block;min-height:0;}
+    .hero-media{
+      position:relative;width:100%;
+      height:clamp(180px,44vw,260px);
+      background-position:center 30%;
+    }
+    .hero-scrim{display:none;}
+    .hero-in{padding-block:34px 42px;}
     .posts-head{flex-direction:column;align-items:flex-start;}
   }
   @media (max-width:560px){
