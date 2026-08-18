@@ -798,6 +798,28 @@
   /* FAQ */
   .faq{background:var(--cream);padding-block:30px 42px;}
   .faq-grupo{max-width:860px;margin-inline:auto;}
+    /* ---- Guias de categoria do FAQ ----
+     Alvo de toque de 44px (min-height + padding), piso de 12px de fonte.
+     flex-wrap e nao rolagem horizontal: guia que sai da tela vira guia que
+     ninguem acha. */
+  .faq-guias{
+    display:flex;flex-wrap:wrap;gap:8px;
+    max-width:860px;margin:0 auto 24px;
+  }
+  .faq-guia{
+    font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:.03em;
+    color:var(--ink-body);background:var(--paper);
+    border:1px solid var(--line);border-radius:999px;
+    padding:11px 16px;min-height:44px;cursor:pointer;
+    transition:background .2s,border-color .2s,color .2s;
+  }
+  .faq-guia:hover{border-color:var(--gold);color:var(--gold-dim);}
+  .faq-guia:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+  .faq-guia.ativa{background:var(--ink-900);border-color:var(--ink-900);color:#F7F3EC;}
+  .faq-bloco[hidden]{display:none;}
+  /* Com uma categoria escolhida, o titulo repete o que a guia ja diz. */
+  .faq.filtrado .faq-cat{display:none;}
+  .faq.filtrado .faq-bloco{margin-top:0;}
   .faq-cat{max-width:860px;margin:26px auto 10px;font-family:var(--sans);
     font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
     color:var(--gold-dim);padding-bottom:7px;border-bottom:1px solid var(--line);}
@@ -2218,7 +2240,17 @@
   </section>
   <section class="faq">
     <div class="wrap">
-      <h2 class="faq-cat">Contábil</h2>
+      <div class="faq-guias" role="tablist" aria-label="Categorias de perguntas">
+        <button class="faq-guia ativa" type="button" role="tab" aria-selected="true" data-cat="todas">Todas</button>
+        <button class="faq-guia" type="button" role="tab" aria-selected="false" data-cat="contabil">Contábil</button>
+        <button class="faq-guia" type="button" role="tab" aria-selected="false" data-cat="fiscal-e-tributario">Fiscal e tributário</button>
+        <button class="faq-guia" type="button" role="tab" aria-selected="false" data-cat="departamento-pessoal">Departamento pessoal</button>
+        <button class="faq-guia" type="button" role="tab" aria-selected="false" data-cat="abertura-e-alteracoes">Abertura e alterações</button>
+        <button class="faq-guia" type="button" role="tab" aria-selected="false" data-cat="migracao-troca-de-contador">Migração / troca de contador</button>
+        <button class="faq-guia" type="button" role="tab" aria-selected="false" data-cat="atendimento-digital">Atendimento digital</button>
+      </div>
+      <section class="faq-bloco" data-cat="contabil">
+        <h2 class="faq-cat">Contábil</h2>
       <div class="faq-grupo">
         <details>
           <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Quais documentos devo enviar à contabilidade?</span></span></summary>
@@ -2254,146 +2286,157 @@
         </details>
         <a class="faq-cta" href="https://wa.me/5567981531190?text=Ol%C3%A1%21%20N%C3%A3o%20encontrei%20minha%20d%C3%BAvida%20no%20site%20e%20gostaria%20de%20falar%20com%20a%20equipe." target="_blank" rel="noopener">Não encontrou sua dúvida? Fale com nossa equipe &rarr;</a>
       </div>
-      <h2 class="faq-cat">Fiscal e tributário</h2>
+      </section>
+      <section class="faq-bloco" data-cat="fiscal-e-tributario">
+        <h2 class="faq-cat">Fiscal e tributário</h2>
       <div class="faq-grupo">
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Como sei quais impostos minha empresa precisa pagar?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h12l6 6v18a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2Z"/><path d="M20 4v6h6"/><path d="m13 24 8-10"/><circle cx="14" cy="15.5" r="1.5"/><circle cx="20" cy="22.5" r="1.5"/></svg><span>Como sei quais impostos minha empresa precisa pagar?</span></span></summary>
           <div class="resposta"><p>Isso depende da atividade, do regime tributário, do faturamento e das operações realizadas pela empresa. Nossa equipe apura os tributos aplicáveis e orienta sobre os respectivos vencimentos.</p></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Simples Nacional é sempre a opção mais econômica?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h12l6 6v18a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2Z"/><path d="M20 4v6h6"/><path d="m13 24 8-10"/><circle cx="14" cy="15.5" r="1.5"/><circle cx="20" cy="22.5" r="1.5"/></svg><span>Simples Nacional é sempre a opção mais econômica?</span></span></summary>
           <div class="resposta"><p>Não. Apesar do nome, o Simples Nacional nem sempre representa a menor carga tributária. A escolha do regime deve considerar faturamento, atividade, folha de pagamento, margens e outras características do negócio.</p></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>O que acontece se minha empresa atrasar um imposto?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h12l6 6v18a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2Z"/><path d="M20 4v6h6"/><path d="m13 24 8-10"/><circle cx="14" cy="15.5" r="1.5"/><circle cx="20" cy="22.5" r="1.5"/></svg><span>O que acontece se minha empresa atrasar um imposto?</span></span></summary>
           <div class="resposta"><p>O atraso pode gerar multa, juros e outras consequências fiscais. Caso exista algum tributo vencido, entre em contato com a equipe para verificarmos a situação e as alternativas disponíveis.</p></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Por que preciso enviar as notas fiscais para a contabilidade?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h12l6 6v18a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2Z"/><path d="M20 4v6h6"/><path d="m13 24 8-10"/><circle cx="14" cy="15.5" r="1.5"/><circle cx="20" cy="22.5" r="1.5"/></svg><span>Por que preciso enviar as notas fiscais para a contabilidade?</span></span></summary>
           <div class="resposta"><p>As notas fiscais são fundamentais para a apuração correta dos tributos e para o cumprimento das obrigações fiscais da empresa.</p></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Posso comprar qualquer produto utilizando o CNPJ da empresa?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h12l6 6v18a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2Z"/><path d="M20 4v6h6"/><path d="m13 24 8-10"/><circle cx="14" cy="15.5" r="1.5"/><circle cx="20" cy="22.5" r="1.5"/></svg><span>Posso comprar qualquer produto utilizando o CNPJ da empresa?</span></span></summary>
           <div class="resposta"><p>O ideal é que as compras realizadas em nome da empresa tenham relação com sua atividade ou operação. Misturar despesas pessoais e empresariais prejudica a organização financeira e contábil.</p></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Minha empresa pode mudar de regime tributário?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h12l6 6v18a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2Z"/><path d="M20 4v6h6"/><path d="m13 24 8-10"/><circle cx="14" cy="15.5" r="1.5"/><circle cx="20" cy="22.5" r="1.5"/></svg><span>Minha empresa pode mudar de regime tributário?</span></span></summary>
           <div class="resposta"><p>Sim, desde que sejam observados os requisitos e períodos permitidos pela legislação. Antes de qualquer mudança, é importante analisar se o novo regime realmente será vantajoso.</p></div>
         </details>
         <a class="faq-cta" href="https://wa.me/5567981531190?text=Ol%C3%A1%21%20N%C3%A3o%20encontrei%20minha%20d%C3%BAvida%20no%20site%20e%20gostaria%20de%20falar%20com%20a%20equipe." target="_blank" rel="noopener">Não encontrou sua dúvida? Fale com nossa equipe &rarr;</a>
       </div>
-      <h2 class="faq-cat">Departamento pessoal</h2>
+      </section>
+      <section class="faq-bloco" data-cat="departamento-pessoal">
+        <h2 class="faq-cat">Departamento pessoal</h2>
       <div class="faq-grupo">
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Quando devo avisar sobre a contratação de um funcionário?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12.5" cy="11" r="4"/><path d="M4.5 27c0-4.4 3.6-7.5 8-7.5s8 3.1 8 7.5"/><circle cx="23" cy="12.5" r="3"/><path d="M22.5 20.5c3.2.5 5.5 3 5.5 6.5"/></svg><span>Quando devo avisar sobre a contratação de um funcionário?</span></span></summary>
           <div class="resposta"><p>Antes do início das atividades do trabalhador. A admissão exige informações e procedimentos prévios, por isso não deixe para comunicar depois que o funcionário já começou a trabalhar.</p></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Quais documentos são necessários para contratar um funcionário?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12.5" cy="11" r="4"/><path d="M4.5 27c0-4.4 3.6-7.5 8-7.5s8 3.1 8 7.5"/><circle cx="23" cy="12.5" r="3"/><path d="M22.5 20.5c3.2.5 5.5 3 5.5 6.5"/></svg><span>Quais documentos são necessários para contratar um funcionário?</span></span></summary>
           <div class="resposta"><p>A documentação pode variar conforme o vínculo e a função. Ao decidir pela contratação, solicite à nossa equipe a relação atualizada dos documentos necessários.</p></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Quando devo informar férias de um funcionário?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12.5" cy="11" r="4"/><path d="M4.5 27c0-4.4 3.6-7.5 8-7.5s8 3.1 8 7.5"/><circle cx="23" cy="12.5" r="3"/><path d="M22.5 20.5c3.2.5 5.5 3 5.5 6.5"/></svg><span>Quando devo informar férias de um funcionário?</span></span></summary>
           <div class="resposta"><p>Com antecedência. As férias envolvem prazos legais e processamento da folha, portanto a programação deve ser comunicada ao Departamento Pessoal antes do período pretendido.</p></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Um funcionário pediu demissão. O que devo fazer?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12.5" cy="11" r="4"/><path d="M4.5 27c0-4.4 3.6-7.5 8-7.5s8 3.1 8 7.5"/><circle cx="23" cy="12.5" r="3"/><path d="M22.5 20.5c3.2.5 5.5 3 5.5 6.5"/></svg><span>Um funcionário pediu demissão. O que devo fazer?</span></span></summary>
           <div class="resposta"><p>Comunique imediatamente nossa equipe antes de realizar procedimentos ou pagamentos. Orientaremos sobre documentos, prazos e cálculos necessários para o desligamento.</p></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Posso pagar salário ou benefícios fora da folha?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12.5" cy="11" r="4"/><path d="M4.5 27c0-4.4 3.6-7.5 8-7.5s8 3.1 8 7.5"/><circle cx="23" cy="12.5" r="3"/><path d="M22.5 20.5c3.2.5 5.5 3 5.5 6.5"/></svg><span>Posso pagar salário ou benefícios fora da folha?</span></span></summary>
           <div class="resposta"><p>Pagamentos relacionados ao trabalho devem ser tratados corretamente na folha e de acordo com a legislação aplicável. Antes de realizar pagamentos adicionais, consulte o Departamento Pessoal.</p></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Preciso informar atestados, faltas e afastamentos?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12.5" cy="11" r="4"/><path d="M4.5 27c0-4.4 3.6-7.5 8-7.5s8 3.1 8 7.5"/><circle cx="23" cy="12.5" r="3"/><path d="M22.5 20.5c3.2.5 5.5 3 5.5 6.5"/></svg><span>Preciso informar atestados, faltas e afastamentos?</span></span></summary>
           <div class="resposta"><p>Sim. Essas ocorrências podem interferir na folha de pagamento e nas obrigações trabalhistas e previdenciárias e devem ser comunicadas dentro dos prazos orientados pela equipe.</p></div>
         </details>
         <a class="faq-cta" href="https://wa.me/5567981531190?text=Ol%C3%A1%21%20N%C3%A3o%20encontrei%20minha%20d%C3%BAvida%20no%20site%20e%20gostaria%20de%20falar%20com%20a%20equipe." target="_blank" rel="noopener">Não encontrou sua dúvida? Fale com nossa equipe &rarr;</a>
       </div>
-      <h2 class="faq-cat">Abertura e alterações</h2>
+      </section>
+      <section class="faq-bloco" data-cat="abertura-e-alteracoes">
+        <h2 class="faq-cat">Abertura e alterações</h2>
       <div class="faq-grupo">
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Quero abrir uma empresa. Por onde começo?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 28V9.5L15 5l10 4.5V28"/><path d="M2 28h28"/><path d="M12 28v-6.5h6V28"/><path d="M10 13h2M10 17.5h2M18 13h2M18 17.5h2"/></svg><span>Quero abrir uma empresa. Por onde começo?</span></span></summary>
           <div class="resposta"><p>Começamos entendendo a atividade que você pretende exercer, estrutura do negócio, localização e demais informações necessárias. A partir disso, orientamos a definição adequada da empresa e conduzimos o processo de formalização.</p></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Quanto tempo leva para abrir uma empresa?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 28V9.5L15 5l10 4.5V28"/><path d="M2 28h28"/><path d="M12 28v-6.5h6V28"/><path d="M10 13h2M10 17.5h2M18 13h2M18 17.5h2"/></svg><span>Quanto tempo leva para abrir uma empresa?</span></span></summary>
           <div class="resposta"><p>O prazo varia conforme atividade, município, órgãos envolvidos, licenças necessárias e análise dos registros. Após avaliarmos o seu caso, conseguimos orientar sobre as etapas envolvidas.</p></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Preciso ter um endereço para abrir minha empresa?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 28V9.5L15 5l10 4.5V28"/><path d="M2 28h28"/><path d="M12 28v-6.5h6V28"/><path d="M10 13h2M10 17.5h2M18 13h2M18 17.5h2"/></svg><span>Preciso ter um endereço para abrir minha empresa?</span></span></summary>
           <div class="resposta"><p>Sim, a empresa precisa possuir um endereço cadastrado. Entretanto, as exigências variam conforme a atividade e a legislação local. Antes de definir o endereço, recomendamos verificar sua viabilidade.</p></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Posso alterar as atividades da minha empresa depois de aberta?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 28V9.5L15 5l10 4.5V28"/><path d="M2 28h28"/><path d="M12 28v-6.5h6V28"/><path d="M10 13h2M10 17.5h2M18 13h2M18 17.5h2"/></svg><span>Posso alterar as atividades da minha empresa depois de aberta?</span></span></summary>
           <div class="resposta"><p>Sim. É possível realizar alterações de atividades, endereço, quadro societário, capital e outras informações, observadas as exigências legais de cada situação.</p></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Vou mudar o endereço da empresa. Preciso avisar a contabilidade?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 28V9.5L15 5l10 4.5V28"/><path d="M2 28h28"/><path d="M12 28v-6.5h6V28"/><path d="M10 13h2M10 17.5h2M18 13h2M18 17.5h2"/></svg><span>Vou mudar o endereço da empresa. Preciso avisar a contabilidade?</span></span></summary>
           <div class="resposta"><p>Sim — e preferencialmente antes da mudança. O novo endereço pode exigir análise de viabilidade e alterações cadastrais perante diferentes órgãos.</p></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Posso incluir ou retirar um sócio da empresa?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 28V9.5L15 5l10 4.5V28"/><path d="M2 28h28"/><path d="M12 28v-6.5h6V28"/><path d="M10 13h2M10 17.5h2M18 13h2M18 17.5h2"/></svg><span>Posso incluir ou retirar um sócio da empresa?</span></span></summary>
           <div class="resposta"><p>Sim. Alterações no quadro societário podem ser realizadas mediante os procedimentos legais e cadastrais correspondentes.</p></div>
         </details>
         <a class="faq-cta" href="https://wa.me/5567981531190?text=Ol%C3%A1%21%20N%C3%A3o%20encontrei%20minha%20d%C3%BAvida%20no%20site%20e%20gostaria%20de%20falar%20com%20a%20equipe." target="_blank" rel="noopener">Não encontrou sua dúvida? Fale com nossa equipe &rarr;</a>
       </div>
-      <h2 class="faq-cat">Migração / troca de contador</h2>
+      </section>
+      <section class="faq-bloco" data-cat="migracao-troca-de-contador">
+        <h2 class="faq-cat">Migração / troca de contador</h2>
       <div class="faq-grupo">
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Quero trocar de contador. É complicado?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h19"/><path d="m18 6 5 5-5 5"/><path d="M28 21H9"/><path d="m14 16-5 5 5 5"/></svg><span>Quero trocar de contador. É complicado?</span></span></summary>
           <div class="resposta"><p>Não precisa ser. A Carmo &amp; Sabala conduz a transição de forma organizada, solicitando as informações e documentos necessários para dar continuidade à contabilidade da empresa com segurança.</p></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Preciso avisar meu contador atual que vou trocar de escritório?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h19"/><path d="m18 6 5 5-5 5"/><path d="M28 21H9"/><path d="m14 16-5 5 5 5"/></svg><span>Preciso avisar meu contador atual que vou trocar de escritório?</span></span></summary>
           <div class="resposta"><p>A troca envolve procedimentos de transição e entrega de documentos e informações. Nossa equipe orienta você sobre cada etapa para que o processo aconteça corretamente.</p></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Vou perder informações ao trocar de contador?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h19"/><path d="m18 6 5 5-5 5"/><path d="M28 21H9"/><path d="m14 16-5 5 5 5"/></svg><span>Vou perder informações ao trocar de contador?</span></span></summary>
           <div class="resposta"><p>Uma migração bem conduzida deve preservar a continuidade das informações contábeis, fiscais e trabalhistas da empresa. Por isso fazemos o levantamento necessário antes de assumir os serviços.</p></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Preciso esperar o início do ano para trocar de contador?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h19"/><path d="m18 6 5 5-5 5"/><path d="M28 21H9"/><path d="m14 16-5 5 5 5"/></svg><span>Preciso esperar o início do ano para trocar de contador?</span></span></summary>
           <div class="resposta"><p>Não necessariamente. A troca pode ser realizada durante o ano, desde que a transição seja planejada e as informações necessárias sejam disponibilizadas.</p></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Vocês analisam a situação da empresa antes de assumir?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h19"/><path d="m18 6 5 5-5 5"/><path d="M28 21H9"/><path d="m14 16-5 5 5 5"/></svg><span>Vocês analisam a situação da empresa antes de assumir?</span></span></summary>
           <div class="resposta"><p>Sim. A análise inicial é importante para identificarmos pendências, obrigações e informações necessárias para uma transição segura.</p></div>
         </details>
         <a class="faq-cta" href="https://wa.me/5567981531190?text=Ol%C3%A1%21%20N%C3%A3o%20encontrei%20minha%20d%C3%BAvida%20no%20site%20e%20gostaria%20de%20falar%20com%20a%20equipe." target="_blank" rel="noopener">Não encontrou sua dúvida? Fale com nossa equipe &rarr;</a>
       </div>
-      <h2 class="faq-cat">Atendimento digital</h2>
+      </section>
+      <section class="faq-bloco" data-cat="atendimento-digital">
+        <h2 class="faq-cat">Atendimento digital</h2>
       <div class="faq-grupo">
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 29s10-8.6 10-16A10 10 0 1 0 6 13c0 7.4 10 16 10 16Z"/><circle cx="16" cy="13" r="3.6"/></svg><span>Quais são os estados atendidos pela Carmo &amp; Sabala?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="26" height="16.5" rx="2.2"/><path d="M11.5 27h9M16 22.5V27"/><path d="M9 11.5h10M9 15.5h6.5"/></svg><span>Quais são os estados atendidos pela Carmo &amp; Sabala?</span></span></summary>
           <div class="resposta"><p>Atendemos em <b>todo o território nacional</b>, com contabilidade online.</p><p style="margin-top:8px">Hoje temos clientes em <b>12 estados</b>:</p><div class="uf-grade" style="margin-top:10px"><span class="uf" title="Amazonas">AM</span><span class="uf" title="Pará">PA</span><span class="uf" title="Roraima">RR</span><span class="uf" title="Tocantins">TO</span><span class="uf" title="Mato Grosso">MT</span><span class="uf" title="Mato Grosso do Sul">MS</span><span class="uf" title="Goiás">GO</span><span class="uf" title="Distrito Federal">DF</span><span class="uf" title="São Paulo">SP</span><span class="uf" title="Minas Gerais">MG</span><span class="uf" title="Paraná">PR</span><span class="uf" title="Paraíba">PB</span></div></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>A Carmo &amp; Sabala atende empresas de todo o Brasil?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="26" height="16.5" rx="2.2"/><path d="M11.5 27h9M16 22.5V27"/><path d="M9 11.5h10M9 15.5h6.5"/></svg><span>A Carmo &amp; Sabala atende empresas de todo o Brasil?</span></span></summary>
           <div class="resposta"><p>Sim. Nosso atendimento é digital e está disponível para empresas em todo o Brasil. Atualmente, já atendemos clientes em 12 estados.</p></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Se o atendimento é digital, como envio meus documentos?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="26" height="16.5" rx="2.2"/><path d="M11.5 27h9M16 22.5V27"/><path d="M9 11.5h10M9 15.5h6.5"/></svg><span>Se o atendimento é digital, como envio meus documentos?</span></span></summary>
           <div class="resposta"><p>Utilizamos ferramentas digitais para facilitar o envio de documentos, informações e solicitações, de acordo com os processos definidos para cada cliente.</p></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Vou falar com pessoas ou o atendimento é automatizado?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="26" height="16.5" rx="2.2"/><path d="M11.5 27h9M16 22.5V27"/><path d="M9 11.5h10M9 15.5h6.5"/></svg><span>Vou falar com pessoas ou o atendimento é automatizado?</span></span></summary>
           <div class="resposta"><p>Você fala com pessoas. Utilizamos tecnologia para agilizar processos, mas o relacionamento e o suporte são realizados por nossa equipe.</p></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Preciso ir presencialmente ao escritório?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="26" height="16.5" rx="2.2"/><path d="M11.5 27h9M16 22.5V27"/><path d="M9 11.5h10M9 15.5h6.5"/></svg><span>Preciso ir presencialmente ao escritório?</span></span></summary>
           <div class="resposta"><p>Na maioria das situações, não. Nossos processos permitem que o atendimento e o envio de informações sejam realizados digitalmente.</p></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Como entro em contato quando tiver uma dúvida?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="26" height="16.5" rx="2.2"/><path d="M11.5 27h9M16 22.5V27"/><path d="M9 11.5h10M9 15.5h6.5"/></svg><span>Como entro em contato quando tiver uma dúvida?</span></span></summary>
           <div class="resposta"><p>Os clientes contam com os canais de atendimento definidos pela Carmo &amp; Sabala para falar com a equipe responsável e acompanhar suas demandas.</p></div>
         </details>
         <details>
-          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a2 2 0 0 1 2-2h6l2.5 3H26a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M11 17h10M11 22h6"/></svg><span>Meus documentos e informações ficam seguros no atendimento digital?</span></span></summary>
+          <summary><span class="faq-q"><svg class="faq-ico" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="#A0733C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="26" height="16.5" rx="2.2"/><path d="M11.5 27h9M16 22.5V27"/><path d="M9 11.5h10M9 15.5h6.5"/></svg><span>Meus documentos e informações ficam seguros no atendimento digital?</span></span></summary>
           <div class="resposta"><p>A Carmo &amp; Sabala utiliza processos e ferramentas voltados à proteção e confidencialidade das informações, seguindo os cuidados aplicáveis ao tratamento dos dados dos clientes.</p></div>
         </details>
         <a class="faq-cta" href="https://wa.me/5567981531190?text=Ol%C3%A1%21%20N%C3%A3o%20encontrei%20minha%20d%C3%BAvida%20no%20site%20e%20gostaria%20de%20falar%20com%20a%20equipe." target="_blank" rel="noopener">Não encontrou sua dúvida? Fale com nossa equipe &rarr;</a>
       </div>
+      </section>
     </div>
   </section>
 </div>
@@ -2743,6 +2786,29 @@
     b.addEventListener('click',e=>{e.preventDefault();abre();}));
   modal.querySelectorAll('[data-fecha]').forEach(b=>b.addEventListener('click',fecha));
   document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!modal.hidden) fecha(); });
+})();
+</script>
+<script>
+/* Guias do FAQ. O observador nao autoriza nada: se este script nao rodar,
+   todos os blocos continuam visiveis e o FAQ funciona como antes. */
+(function(){
+  const barra=document.querySelector('.faq-guias');
+  if(!barra) return;
+  const secao=document.querySelector('.faq');
+  const guias=[...barra.querySelectorAll('.faq-guia')];
+  const blocos=[...document.querySelectorAll('.faq-bloco')];
+  function escolher(cat){
+    guias.forEach(g=>{
+      const on=g.dataset.cat===cat;
+      g.classList.toggle('ativa',on);
+      g.setAttribute('aria-selected',on?'true':'false');
+    });
+    blocos.forEach(b=>{ b.hidden = cat!=='todas' && b.dataset.cat!==cat; });
+    secao.classList.toggle('filtrado',cat!=='todas');
+    /* fecha as sanfonas abertas para a lista nova comecar do topo */
+    document.querySelectorAll('.faq-bloco details[open]').forEach(d=>d.open=false);
+  }
+  guias.forEach(g=>g.addEventListener('click',()=>escolher(g.dataset.cat)));
 })();
 </script>
 </body>
