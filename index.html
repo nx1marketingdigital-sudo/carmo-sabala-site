@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Carmo &amp; Sabala Contabilidade</title>
 <meta name="description" content="Escritorio de contabilidade em Campo Grande / MS, com clientes em 13 estados. Abertura e regularizacao de empresas, departamento pessoal e fiscal.">
 <meta name="theme-color" content="#101726">
@@ -1439,6 +1439,47 @@
                  opacity .46s ease !important;
     }
   }
+
+  /* ═══════ "Vamos começar?" — o seletor que a Elimarce pediu em 17/08 ═══════ */
+  .comecar{
+    background:var(--ink-900);border-radius:10px;padding:24px 26px;margin-bottom:18px;
+    display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
+    gap:26px;align-items:center;
+  }
+  .comecar-txt .eyebrow{color:var(--gold);margin:0 0 8px;}
+  .comecar-txt h3{
+    font-family:var(--display);font-weight:400;font-size:clamp(19px,2vw,25px);
+    line-height:1.2;margin:0 0 7px;color:#FBF7F0;
+  }
+  .comecar-txt p{margin:0;font-size:13px;line-height:1.6;color:#C6BEB2;}
+  .comecar-rot{
+    display:block;font-family:var(--sans);font-size:11px;font-weight:700;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--gold-hi);margin-bottom:9px;
+  }
+  .comecar-linha{display:flex;gap:12px;align-items:stretch;flex-wrap:wrap;}
+  .comecar-linha select{
+    flex:1 1 210px;min-width:0;min-height:48px;
+    font-family:var(--sans);font-size:13.5px;color:#F7F3EC;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(194,160,94,.42);border-radius:7px;
+    padding:12px 38px 12px 14px;cursor:pointer;appearance:none;
+    background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23BE8C4E' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='m5 9 7 7 7-7'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 14px center;
+  }
+  .comecar-linha select:focus{outline:2px solid var(--gold);outline-offset:2px;}
+  .comecar-linha select option{color:#1A1815;background:#FFF;}
+  .comecar-btn{
+    flex:0 0 auto;min-height:48px;display:inline-flex;align-items:center;
+    white-space:nowrap;
+  }
+  /* Enquanto nao ha estado escolhido o botao nao leva a lugar nenhum: sem isso
+     o visitante cai no WhatsApp sem a informacao que o bloco existe para colher. */
+  .comecar-btn[aria-disabled="true"]{opacity:.45;pointer-events:none;}
+  @media (max-width:860px){
+    .comecar{grid-template-columns:1fr;gap:18px;}
+    .comecar-linha select{flex:1 1 100%;}
+    .comecar-btn{width:100%;justify-content:center;}
+  }
 </style>
 
 <!-- =====================  CABEÇALHO  ===================== -->
@@ -2658,6 +2699,26 @@
     </div>
 
     <div class="wrap">
+      <div class="comecar">
+        <div class="comecar-txt">
+          <p class="eyebrow">Vamos começar?</p>
+          <h3>Me conte onde você está.</h3>
+          <p>Selecione o estado da sua empresa para iniciarmos a conversa.</p>
+        </div>
+        <div class="comecar-form">
+          <label class="comecar-rot" for="uf-empresa">Estado da empresa</label>
+          <div class="comecar-linha">
+            <select id="uf-empresa" aria-label="Estado da sua empresa">
+              <option value="" selected>Selecione seu estado</option>
+              <option value="Acre">Acre</option><option value="Alagoas">Alagoas</option><option value="Amapá">Amapá</option><option value="Amazonas">Amazonas</option><option value="Bahia">Bahia</option><option value="Ceará">Ceará</option><option value="Distrito Federal">Distrito Federal</option><option value="Espírito Santo">Espírito Santo</option><option value="Goiás">Goiás</option><option value="Maranhão">Maranhão</option><option value="Mato Grosso">Mato Grosso</option><option value="Mato Grosso do Sul">Mato Grosso do Sul</option><option value="Minas Gerais">Minas Gerais</option><option value="Pará">Pará</option><option value="Paraíba">Paraíba</option><option value="Paraná">Paraná</option><option value="Pernambuco">Pernambuco</option><option value="Piauí">Piauí</option><option value="Rio de Janeiro">Rio de Janeiro</option><option value="Rio Grande do Norte">Rio Grande do Norte</option><option value="Rio Grande do Sul">Rio Grande do Sul</option><option value="Rondônia">Rondônia</option><option value="Roraima">Roraima</option><option value="Santa Catarina">Santa Catarina</option><option value="São Paulo">São Paulo</option><option value="Sergipe">Sergipe</option><option value="Tocantins">Tocantins</option>
+            </select>
+            <a class="btn btn-gold comecar-btn" id="uf-continuar" href="https://wa.me/5567981531190" target="_blank" rel="noopener" aria-disabled="true">Continuar &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap">
       <div class="faixa-uf">
         <div class="faixa-uf-txt">
           <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#A0733C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -2958,6 +3019,31 @@
     document.querySelectorAll('.faq-bloco details[open]').forEach(d=>d.open=false);
   }
   guias.forEach(g=>g.addEventListener('click',()=>escolher(g.dataset.cat)));
+})();
+</script>
+
+<script>
+/* O "Continuar" da pagina de Contato. Monta o link do WhatsApp com o estado
+   escolhido, no texto que a propria Elimarce ditou em 17/08 as 18:57.
+   Sem handler inline e sem funcao chamada "open" -- ver L-2026-08-16-02. */
+(() => {
+  const sel = document.getElementById('uf-empresa');
+  const btn = document.getElementById('uf-continuar');
+  if (!sel || !btn) return;
+  const BASE = 'https://wa.me/5567981531190';
+  const atualizar = () => {
+    const uf = sel.value;
+    if (!uf) {
+      btn.setAttribute('aria-disabled', 'true');
+      btn.href = BASE;
+      return;
+    }
+    btn.removeAttribute('aria-disabled');
+    const texto = 'Olá! Minha empresa está em ' + uf + ' e gostaria de falar com a Carmo & Sabala.';
+    btn.href = BASE + '?text=' + encodeURIComponent(texto);
+  };
+  sel.addEventListener('change', atualizar);
+  atualizar();
 })();
 </script>
 </body>
